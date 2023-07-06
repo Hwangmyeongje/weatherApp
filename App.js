@@ -40,11 +40,16 @@ export default function App() {
     );
     setCity(location[0].city);
     const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=alerts&appid=${API_KEY}&units=metric`
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`
     );
     const json = await response.json();
-    console.log(json);
-    setDays(json.daily);
+    setDays(
+      json.list.filter((weather) => {
+        if (weather.dt_txt.includes("00:00:00")) {
+          return weather;
+        }
+      })
+    );
   };
   useEffect(() => {
     getWeather();
@@ -71,7 +76,9 @@ export default function App() {
         ) : (
           days.map((day, index) => (
             <View key={index} style={styles.day}>
-              <Text>{new Date(day.dt * 1000).toString().substring(0, 10)}</Text>
+              <Text style={styles.date}>
+                {new Date(day.dt * 1000).toString().substring(0, 10)}
+              </Text>
               <View
                 style={{
                   flexDirection: "row",
@@ -81,7 +88,7 @@ export default function App() {
                 }}
               >
                 <Text style={styles.temp}>
-                  {parseFloat(day.temp.day).toFixed(1)}
+                  {parseFloat(day.main.temp).toFixed(1)}
                 </Text>
                 <Fontisto
                   name={icons[day.weather[0].main]}
@@ -116,12 +123,12 @@ const styles = StyleSheet.create({
   weather: {},
   day: {
     width: SCREEN_WIDTH,
-    alignItems: "center",
+    alignItems: "flex-start",
   },
   temp: {
     marginTop: 50,
-    fontWeight: "600",
-    fontSize: 158,
+    fontWeight: "60",
+    fontSize: 138,
   },
   description: {
     marginTop: -30,
@@ -129,5 +136,10 @@ const styles = StyleSheet.create({
   },
   tinyText: {
     fontSize: 20,
+  },
+  date: {
+    fontSize: 50,
+    marginBottom: -50,
+    marginTop: 50,
   },
 });
