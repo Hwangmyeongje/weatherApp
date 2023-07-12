@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { Fontisto } from "@expo/vector-icons";
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
-const API_KEY = "e03a946a58a10db62e4a6e9b1759d172";
+const API_KEY = "";//api_key넣는 곳
 const icons = {
   Clouds: "cloudy",
   Clear: "day-sunny",
